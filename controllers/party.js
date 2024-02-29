@@ -69,7 +69,26 @@ const postParty = async (req, res) => {
     return;
   }
 };
+const getSingleParty = async (req, res) => {
+  try {
+    const params = req.params;
+    if (!params.id) {
+      res.status(400).json({ message: "Party Id is required" });
+      return;
+    }
+    const parties = await db.query("SELECT * FROM party where party_id = ?", [
+      params.id,
+    ]);
+
+    res.json({ parties: parties[0] });
+  } catch (error) {
+    console.error(error); // Log the error for debugging purposes
+    res.status(500).json({ message: "Internal Server Error" });
+    return;
+  }
+};
 module.exports = {
   getParty,
   postParty,
+  getSingleParty,
 };
