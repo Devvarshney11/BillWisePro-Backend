@@ -1,7 +1,8 @@
 const express = require("express");
-const { getItems, postItems } = require("../controllers/index");
+const { getItems, postItems, singleItem } = require("../controllers/index");
 const router = express.Router();
 
-router.get("/items", getItems);
+router.post("/items", getItems);
 router.post("/addItems", postItems);
+router.get("/singleItem/:id", singleItem);
 module.exports = router;

@@ -71,7 +71,26 @@ const postItems = async (req, res) => {
     return;
   }
 };
+const singleItem = async (req, res) => {
+  try {
+    const params = req.params;
+    if (!params.id) {
+      res.status(400).json({ message: "Item is required" });
+      return;
+    }
+    const item = await db.query("SELECT * FROM item where Item_id = ?", [
+      params.id,
+    ]);
+
+    res.json({ item: item[0] });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+    return;
+  }
+};
 module.exports = {
   getItems,
   postItems,
+  singleItem,
 };
