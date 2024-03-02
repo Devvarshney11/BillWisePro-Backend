@@ -2,5 +2,5 @@ const express = require("express");
 const { getPartySingleSale } = require("../controllers/index");
 const router = express.Router();
 
-router.post("/getPartySingleSale", getPartySingleSale);
+router.get("/getSingleInvoice/:id", getPartySingleSale);
 module.exports = router;
