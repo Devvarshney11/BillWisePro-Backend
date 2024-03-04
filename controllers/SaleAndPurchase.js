@@ -9,7 +9,7 @@ const getPartySingleSale = async (req, res) => {
       return;
     }
     const saleInvoice = await db.query(
-      "SELECT sp.id as invoice_no,sp.date,py.total_amount,py.discount_amount,py.amount_received,p.name as p_name,p.GSTIN as p_gst,p.address as p_add,p.phone_number as p_phno,us.Company_Name,us.Phone_Number FROM billwisepro.sale_and_purchase sp JOIN billwisepro.payment py ON sp.Transaction_id = py.Transaction_Id JOIN billwisepro.party p ON sp.party_id = p.party_id JOIN billwisepro.user us ON sp.admin_id = us.user_id WHERE sp.id = ?",
+      "SELECT sp.id as invoice_no,sp.date,sp.type,py.total_amount,py.discount_amount,py.amount_received,py.Transaction_type,p.name as p_name,p.GSTIN as p_gst,p.address as p_add,p.phone_number as p_phno,us.Company_Name,us.Phone_Number FROM billwisepro.sale_and_purchase sp JOIN billwisepro.payment py ON sp.Transaction_id = py.Transaction_Id JOIN billwisepro.party p ON sp.party_id = p.party_id JOIN billwisepro.user us ON sp.admin_id = us.user_id WHERE sp.id = ?",
       [sale_id.id]
     );
     const items = await db.query(

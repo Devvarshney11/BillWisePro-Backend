@@ -1,4 +1,4 @@
-const { UserController, addUser } = require("./user");
+const { UserController, addUser, userData } = require("./user");
 const { getItems, postItems, singleItem } = require("./items");
 const { getParty, postParty, getSingleParty } = require("./party");
 const { getPartyTransactions } = require("./Transaction");
@@ -9,6 +9,7 @@ module.exports = {
   singleItem,
   UserController,
   addUser,
+  userData,
   getParty,
   postParty,
   getSingleParty,
