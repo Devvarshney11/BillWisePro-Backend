@@ -20,5 +20,22 @@ const getPartyTransactions = async (req, res) => {
     return;
   }
 };
-
-module.exports = { getPartyTransactions };
+const getInvoicesCount = async (req, res) => {
+  try {
+    const { user_id } = req.body;
+    if (!user_id) {
+      res.status(400).json({ message: "User ID is required" });
+      return;
+    }
+    const invoices = await db.query(
+      "SELECT COUNT(*) as count FROM billwisepro.sale_and_purchase WHERE admin_id = ?",
+      [user_id]
+    );
+    res.json({ invoicescount: invoices[0] });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+    return;
+  }
+};
+module.exports = { getPartyTransactions, getInvoicesCount };

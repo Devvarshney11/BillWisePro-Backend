@@ -34,19 +34,10 @@ const postParty = async (req, res) => {
       to_pay,
       user_id,
     } = req.body;
-    if (
-      !name ||
-      !GSTIN ||
-      !phone_number ||
-      !email_id ||
-      !address ||
-      !notice_period ||
-      !user_id
-    ) {
+    if (!name || !phone_number || !address || !user_id) {
       res.status(400).json({ message: "All fields are required" });
       return;
     }
-    console.log(limit, user_id, notice_period, to_get, to_pay);
     const user = await db.query(
       "INSERT INTO party (name,GSTIN,phone_number,email_id,address,notice_period,limit_amount,to_get,to_pay,user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
