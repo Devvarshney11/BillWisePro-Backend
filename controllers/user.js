@@ -74,8 +74,66 @@ const userData = async (req, res) => {
     return;
   }
 };
+
+const generate = async (req, res) => {
+  try {
+    const { Transaction_type, total_amount, discount_amount, amount_received } =
+      req.body.transactions;
+    const results = await db.query(
+      "INSERT INTO payment (Transaction_type, total_amount, discount_amount, amount_received) VALUES (?, ?, ?, ?)",
+      [Transaction_type, total_amount, discount_amount, amount_received]
+    );
+    let insertId;
+    if (
+      results.length > 0 &&
+      results[0] &&
+      typeof results[0] === "object" &&
+      "insertId" in results[0]
+    ) {
+      insertId = results[0].insertId;
+      console.log(insertId);
+    } else {
+      console.error("InsertId not found in the database response.");
+    }
+    const { Shipping_address, date, party_id, user_id, type } = req.body.sale;
+    const saleResult = await db.query(
+      "INSERT INTO sale_and_purchase (Shipping_address, Transaction_id, date, party_id, admin_id, type) VALUES (?, ?, ?, ?, ?, ?)",
+      [Shipping_address, insertId, date, party_id, user_id, type]
+    );
+    let saleId;
+    if (
+      saleResult.length > 0 &&
+      saleResult[0] &&
+      typeof saleResult[0] === "object" &&
+      "insertId" in saleResult[0]
+    ) {
+      saleId = saleResult[0].insertId;
+      console.log(saleId);
+    } else {
+      console.error("InsertId not found in the database response.");
+    }
+    const Items = req.body.items;
+    console.log(Items);
+    Items.forEach(async (item) => {
+      const { item_id, item_qty } = item;
+      const sql =
+        "INSERT INTO bill (sale_id, item_id, item_qty) VALUES (?, ?, ?)";
+      const values = [saleId, item_id, item_qty];
+      const response = await db.query(sql, values);
+      console.log(response);
+    });
+    res
+      .status(200)
+      .json({ message: "Data inserted successfully", invoice_no: saleId });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   UserController,
   addUser,
   userData,
+  generate,
 };
